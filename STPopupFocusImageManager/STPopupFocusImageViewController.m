@@ -37,7 +37,9 @@
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 70000
         self.wantsFullScreenLayout = YES;
+#endif
         _popupFocusImageManager = popupFocusImageManager;
         _fromImage = fromImage;
         _originalImageURL = originalImageURL;
