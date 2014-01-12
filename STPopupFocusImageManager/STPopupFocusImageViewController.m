@@ -54,4 +54,9 @@
     [_popupFocusImageManager popupBack];
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 @end

@@ -113,9 +113,14 @@ typedef enum {
 - (void)popupBack
 {
     //
-    // Need to do before dismissViewController.
+    // Need to do these codes before dismissViewController.
     //
+    
+    // If View controller-based status bar appearance(plist) was YES(default), this code does not work.
+    // But STPopupFocusImageViewController#prefersStatusBarHidden returns YES.
+    // So Statusbar will be hidden.
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    
     [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
         _rootViewController.navigationController.navigationBar.alpha = 1.0;
     }];
