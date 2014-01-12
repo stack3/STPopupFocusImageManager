@@ -29,6 +29,12 @@
 
 @interface STPopupFocusImageManager : NSObject
 
+/**
+ * Need to set NO if ViewController-based statusbar appearance is NOS on plist.
+ * Default is YES.
+ */
+@property (nonatomic) BOOL isViewControllerBasedStatusBarAppearance;
+
 - (id)initWithRootViewController:(UIViewController *)rootViewController;
 - (id)initWithRootViewController:(UIViewController *)rootViewController imageViewControllerClass:(Class)imageViewControllerClass;
 

@@ -43,6 +43,7 @@ typedef enum {
     CGFloat _sourceStatusBarHeight;
     __strong STPopupFocusImageAnimationView *_popupAnimationView;
     __weak STPopupFocusImageViewController *_imageViewController;
+    BOOL _isViewControllerBasedStatusBarAppearance;
 }
 
 - (id)initWithRootViewController:(UIViewController *)rootViewController
@@ -56,6 +57,7 @@ typedef enum {
     if (self) {
         _rootViewController = rootViewController;
         _imageViewControllerClass = imageViewControllerClass;
+        _isViewControllerBasedStatusBarAppearance = YES;
         
         if (!_rootViewController.view.autoresizesSubviews) {
             //
@@ -89,7 +91,10 @@ typedef enum {
                     originalImageURL:originalImageURL
                    originalImageSize:originalImageSize];
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    if (!_isViewControllerBasedStatusBarAppearance) {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    }
+    
     [_popupAnimationView startPopupAnimatingWithCompletion:^{
         _phase = _STPhaseImageViewShown;
         
@@ -116,10 +121,9 @@ typedef enum {
     // Need to do these codes before dismissViewController.
     //
     
-    // If View controller-based status bar appearance(plist) was YES(default), this code does not work.
-    // But STPopupFocusImageViewController#prefersStatusBarHidden returns YES.
-    // So Statusbar will be hidden.
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    if (!_isViewControllerBasedStatusBarAppearance) {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    }
     
     [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
         _rootViewController.navigationController.navigationBar.alpha = 1.0;
