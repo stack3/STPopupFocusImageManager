@@ -40,7 +40,6 @@ typedef enum {
     _STPhase _phase;
     __weak UIViewController *_rootViewController;
     Class _imageViewControllerClass;
-    CGFloat _sourceStatusBarHeight;
     __strong STPopupFocusImageAnimationView *_popupAnimationView;
     __weak STPopupFocusImageViewController *_imageViewController;
     BOOL _isViewControllerBasedStatusBarAppearance;
@@ -78,8 +77,6 @@ typedef enum {
     if (_phase != _STPhaseIdle) return;
     
     _phase = _STPhasePopupAnimation;
-    // Get statusBar height before hidding.
-    _sourceStatusBarHeight = [self getStatusBarHeight];
     
     CGRect frame = [self getImageAnimationViewFrame];
     _popupAnimationView = [[STPopupFocusImageAnimationView alloc] initWithFrame:frame];
@@ -147,20 +144,6 @@ typedef enum {
 
 #pragma mark - Dimensions
 
-- (CGFloat)getStatusBarHeight
-{
-    UIApplication *application = [UIApplication sharedApplication];
-    
-    CGFloat statusBarHeight = 0;
-    if (UIInterfaceOrientationIsPortrait(_rootViewController.interfaceOrientation)) {
-        statusBarHeight = application.statusBarFrame.size.height;
-    } else {
-        statusBarHeight = application.statusBarFrame.size.width;
-    }
-    
-    return statusBarHeight;
-}
-
 - (CGRect)getImageAnimationViewFrame
 {
     UIScreen *mainScreen = [UIScreen mainScreen];
@@ -171,10 +154,7 @@ typedef enum {
         frame.size.width = mainScreen.bounds.size.height;
         frame.size.height = mainScreen.bounds.size.width;
     }
-    frame.origin.y -= _sourceStatusBarHeight;
-    if (_rootViewController.navigationController) {
-        frame.origin.y -= _rootViewController.navigationController.navigationBar.frame.size.height;
-    }
+    frame.origin.y -= _rootViewController.view.frame.origin.y;
     
     return frame;
 }
