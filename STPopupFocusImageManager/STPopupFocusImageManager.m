@@ -148,7 +148,8 @@ typedef enum {
 {
     UIScreen *mainScreen = [UIScreen mainScreen];
     CGRect frame = CGRectZero;
-    if (UIInterfaceOrientationIsPortrait(_rootViewController.interfaceOrientation)) {
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
         frame.size = mainScreen.bounds.size;
     } else {
         frame.size.width = mainScreen.bounds.size.height;
