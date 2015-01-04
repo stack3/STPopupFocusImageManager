@@ -26,22 +26,23 @@
 
 #import "STPopupFocusImageViewController.h"
 #import "STPopupFocusImageManager.h"
+#import "STPopupFocusImageDefaultView.h"
+
+@interface STPopupFocusImageViewController () <STPopupFocusImageDefaultViewDelegate>
+
+@property (weak, nonatomic) STPopupFocusImageDefaultView *zoomImageView;
+@end
 
 @implementation STPopupFocusImageViewController
 
-- (id)initWithPopupFocusImageManager:(STPopupFocusImageManager *)popupFocusImageManager
-                            fromImage:(UIImage *)fromImage
-                      imageViewFrame:(CGRect)imageViewFrame
-                    originalImageURL:(NSURL *)originalImageURL
-                   originalImageSize:(CGSize)originalImageSize
-{
+- (instancetype)initWithPopupFocusImageManager:(STPopupFocusImageManager *)popupFocusImageManager
+                                imageViewFrame:(CGRect)imageViewFrame
+                              originalImageURL:(NSURL *)originalImageURL
+                             originalImageSize:(CGSize)originalImageSize {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 70000
-        self.wantsFullScreenLayout = YES;
-#endif
         _popupFocusImageManager = popupFocusImageManager;
-        _fromImage = fromImage;
+        _fromImage = popupFocusImageManager.fromImage;
         _originalImageURL = originalImageURL;
         _originalImageSize = originalImageSize;
         _imageViewFrame = imageViewFrame;
@@ -49,14 +50,34 @@
     return self;
 }
 
-- (void)dismissPopupFocusImage
-{
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    CGRect bounds = self.view.bounds;
+
+    STPopupFocusImageDefaultView *zoomImageView = [[STPopupFocusImageDefaultView alloc] initWithFrame:bounds fromImage:self.fromImage originalImageSize:self.originalImageSize];
+    _zoomImageView = zoomImageView;
+    _zoomImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    _zoomImageView.delegate = self;
+    [self.view addSubview:_zoomImageView];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [_zoomImageView setOriginalImage:[UIImage imageWithContentsOfFile:self.originalImageURL.path]];
+}
+
+- (void)dismissPopupFocusImage {
     [_popupFocusImageManager popupBack];
 }
 
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
+}
+
+#pragma mark - STPopupFocusImageDefaultViewDelegate
+
+- (void)popupFocusZoomImageViewHandleSingleTap:(STPopupFocusImageDefaultView *)sender {
+    [self dismissPopupFocusImage];
 }
 
 @end

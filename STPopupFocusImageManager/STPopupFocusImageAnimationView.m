@@ -32,17 +32,15 @@
 @interface STPopupFocusImageAnimationView ()
 
 @property (weak, nonatomic) UIWindow *parentWindow;
+@property (strong, nonatomic) UIImageView *popupImageView;
+@property (strong, nonatomic) UIView *fromView;
+@property (strong, nonatomic) UIImage *fromImage;
+@property (strong, nonatomic) NSURL *originalImageURL;
+@property (nonatomic) CGSize originalImageSize;
 
 @end
 
-@implementation STPopupFocusImageAnimationView {
-    __strong UIImageView *_popupImageView;
-
-    __strong UIView *_fromView;
-    __strong UIImage *_fromImage;
-    __strong NSURL *_originalImageURL;
-    CGSize _originalImageSize;
-}
+@implementation STPopupFocusImageAnimationView
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -100,7 +98,12 @@
         if (compleBlock) {
             compleBlock();
         }
-        [self removeFromSuperview];
+        //
+        // For navigationBar blink.
+        //
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self removeFromSuperview];
+        });
     }];
 }
 
@@ -125,7 +128,13 @@
         if (compleBlock) {
             compleBlock();
         }
-        [self removeFromSuperview];
+        //
+        // For navigationBar blink.
+        //
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self removeFromSuperview];
+        });
+
     }];
 }
 

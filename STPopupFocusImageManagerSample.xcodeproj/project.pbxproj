@@ -24,7 +24,6 @@
 		B78F1A91171641E800D547EF /* STPopupFocusImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B78F1A90171641E800D547EF /* STPopupFocusImageViewController.m */; };
 		B78F1A9917164B2C00D547EF /* ramen200x150.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B78F1A9717164B2C00D547EF /* ramen200x150.jpg */; };
 		B78F1A9A17164B2C00D547EF /* ramen800x600.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B78F1A9817164B2C00D547EF /* ramen800x600.jpg */; };
-		B78F1A9D17165A4700D547EF /* STPopupFocusImageDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B78F1A9C17165A4700D547EF /* STPopupFocusImageDefaultViewController.m */; };
 		B78F1AA017167E0E00D547EF /* STPopupFocusImageDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = B78F1A9F17167E0D00D547EF /* STPopupFocusImageDefines.m */; };
 		B78F1AA31716823400D547EF /* STPopupFocusImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B78F1AA21716823300D547EF /* STPopupFocusImageUtils.m */; };
 /* End PBXBuildFile section */
@@ -56,8 +55,6 @@
 		B78F1A90171641E800D547EF /* STPopupFocusImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPopupFocusImageViewController.m; sourceTree = "<group>"; };
 		B78F1A9717164B2C00D547EF /* ramen200x150.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ramen200x150.jpg; sourceTree = "<group>"; };
 		B78F1A9817164B2C00D547EF /* ramen800x600.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ramen800x600.jpg; sourceTree = "<group>"; };
-		B78F1A9B17165A4700D547EF /* STPopupFocusImageDefaultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPopupFocusImageDefaultViewController.h; sourceTree = "<group>"; };
-		B78F1A9C17165A4700D547EF /* STPopupFocusImageDefaultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPopupFocusImageDefaultViewController.m; sourceTree = "<group>"; };
 		B78F1A9E17167DAF00D547EF /* STPopupFocusImageDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPopupFocusImageDefines.h; sourceTree = "<group>"; };
 		B78F1A9F17167E0D00D547EF /* STPopupFocusImageDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPopupFocusImageDefines.m; sourceTree = "<group>"; };
 		B78F1AA11716823300D547EF /* STPopupFocusImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPopupFocusImageUtils.h; sourceTree = "<group>"; };
@@ -145,8 +142,6 @@
 				B78F1A8D171641D200D547EF /* STPopupFocusImageAnimationView.m */,
 				B78F1A8F171641E800D547EF /* STPopupFocusImageViewController.h */,
 				B78F1A90171641E800D547EF /* STPopupFocusImageViewController.m */,
-				B78F1A9B17165A4700D547EF /* STPopupFocusImageDefaultViewController.h */,
-				B78F1A9C17165A4700D547EF /* STPopupFocusImageDefaultViewController.m */,
 				B75C06A8172BF12F00BF21A7 /* STPopupFocusImageDefaultView.h */,
 				B75C06A9172BF12F00BF21A7 /* STPopupFocusImageDefaultView.m */,
 				B78F1AA11716823300D547EF /* STPopupFocusImageUtils.h */,
@@ -239,7 +234,6 @@
 				B78F1A8B171641B400D547EF /* STPopupFocusImageManager.m in Sources */,
 				B78F1A8E171641D200D547EF /* STPopupFocusImageAnimationView.m in Sources */,
 				B78F1A91171641E800D547EF /* STPopupFocusImageViewController.m in Sources */,
-				B78F1A9D17165A4700D547EF /* STPopupFocusImageDefaultViewController.m in Sources */,
 				B78F1AA017167E0E00D547EF /* STPopupFocusImageDefines.m in Sources */,
 				B78F1AA31716823400D547EF /* STPopupFocusImageUtils.m in Sources */,
 				B75C06AA172BF12F00BF21A7 /* STPopupFocusImageDefaultView.m in Sources */,

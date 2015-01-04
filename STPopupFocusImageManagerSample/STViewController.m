@@ -26,6 +26,7 @@
 
 #import "STViewController.h"
 #import "STPopupFocusImageManager.h"
+#import "STPopupFocusImageViewController.h"
 
 @implementation STViewController {
     IBOutlet __weak UIButton *_imageButton;
@@ -50,11 +51,16 @@
         _imageManager = [[STPopupFocusImageManager alloc] initWithRootViewController:self];
     }
     
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"ramen800x600" withExtension:@"jpg"];
-    [_imageManager popupFromView:_imageButton
-                       fromImage:_image
-                originalImageURL:url
-               originalImageSize:CGSizeMake(800, 600)];
+    NSURL *originalImageURL = [[NSBundle mainBundle] URLForResource:@"ramen800x600" withExtension:@"jpg"];
+    CGSize originalImageSize = CGSizeMake(800, 600);
+    [_imageManager popupFromView:_imageButton fromImage:_image originalImageURL:originalImageURL originalImageSize:originalImageSize completion:^(CGRect destinationImageFrame) {
+        STPopupFocusImageViewController *con =
+        [[STPopupFocusImageViewController alloc] initWithPopupFocusImageManager:_imageManager
+                                                                 imageViewFrame:destinationImageFrame
+                                                               originalImageURL:originalImageURL
+                                                              originalImageSize:originalImageSize];
+        [self presentViewController:con animated:NO completion:nil];
+     }];
 }
 
 @end

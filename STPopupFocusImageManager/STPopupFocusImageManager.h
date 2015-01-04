@@ -27,7 +27,11 @@
 #import <Foundation/Foundation.h>
 #import "STPopupFocusImageViewController.h"
 
+typedef void (^STPopupFocusImageManagerPopupCompleteBlock)(CGRect destinationImageFrame);
+
 @interface STPopupFocusImageManager : NSObject
+
+@property (strong, nonatomic) UIImage *fromImage;
 
 /**
  * Need to set NO if ViewController-based statusbar appearance is NOS on plist.
@@ -36,12 +40,11 @@
 @property (nonatomic) BOOL isViewControllerBasedStatusBarAppearance;
 
 - (id)initWithRootViewController:(UIViewController *)rootViewController;
-- (id)initWithRootViewController:(UIViewController *)rootViewController imageViewControllerClass:(Class)imageViewControllerClass;
-
 - (void)popupFromView:(UIView *)fromView
             fromImage:(UIImage *)fromImage
      originalImageURL:(NSURL *)originalImageURL
-    originalImageSize:(CGSize)originalImageSize;
+    originalImageSize:(CGSize)originalImageSize
+           completion:(STPopupFocusImageManagerPopupCompleteBlock)complete;
 - (void)popupBack;
 
 @end

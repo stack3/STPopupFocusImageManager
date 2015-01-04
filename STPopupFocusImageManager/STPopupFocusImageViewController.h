@@ -36,11 +36,10 @@
 @property (strong, nonatomic, readonly) NSURL *originalImageURL;
 @property (nonatomic, readonly) CGSize originalImageSize;
 
-- (id)initWithPopupFocusImageManager:(STPopupFocusImageManager *)popupFocusImageManager
-                           fromImage:(UIImage *)fromImage
-                      imageViewFrame:(CGRect)imageViewFrame
-                    originalImageURL:(NSURL *)originalImageURL
-                   originalImageSize:(CGSize)originalImageSize;
+- (instancetype)initWithPopupFocusImageManager:(STPopupFocusImageManager *)popupFocusImageManager
+                                imageViewFrame:(CGRect)imageViewFrame
+                              originalImageURL:(NSURL *)originalImageURL
+                             originalImageSize:(CGSize)originalImageSize;
 /**
  * Dismiss the popup focus image.
  *
