@@ -102,7 +102,21 @@ typedef enum {
                                                            imageViewFrame:destinationImageFrame
                                                          originalImageURL:originalImageURL
                                                         originalImageSize:originalImageSize];
-        [_rootViewController presentViewController:imageViewCon animated:NO completion:nil];
+        BOOL wasNavbarHidden;
+        if (_rootViewController.navigationController) {
+            wasNavbarHidden = _rootViewController.navigationController.navigationBarHidden;
+            if (! wasNavbarHidden) {
+                _rootViewController.navigationController.navigationBarHidden = YES;
+            }
+        } else {
+            wasNavbarHidden = YES;
+        }
+        [_rootViewController presentViewController:imageViewCon animated:NO completion:^{
+            if (! wasNavbarHidden) {
+                _rootViewController.navigationController.navigationBarHidden = NO;
+            }
+        }];
+
         _imageViewController = imageViewCon;
     }];
     [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
