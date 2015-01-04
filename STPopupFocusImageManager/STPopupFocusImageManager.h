@@ -27,7 +27,7 @@
 #import <Foundation/Foundation.h>
 #import "STPopupFocusImageViewController.h"
 
-typedef void (^STPopupFocusImageManagerPopupCompleteBlock)(CGRect destinationImageFrame);
+typedef UIViewController *(^STPopupFocusImageManagerPopupCompleteBlock)(CGRect destinationImageFrame);
 
 @interface STPopupFocusImageManager : NSObject
 

@@ -30,12 +30,6 @@
 
 @interface STPopupFocusImageViewController : UIViewController
 
-@property (weak, nonatomic, readonly) STPopupFocusImageManager *popupFocusImageManager;
-@property (strong, nonatomic, readonly) UIImage *fromImage;
-@property (nonatomic, readonly) CGRect imageViewFrame;
-@property (strong, nonatomic, readonly) NSURL *originalImageURL;
-@property (nonatomic, readonly) CGSize originalImageSize;
-
 - (instancetype)initWithPopupFocusImageManager:(STPopupFocusImageManager *)popupFocusImageManager
                                 imageViewFrame:(CGRect)imageViewFrame
                               originalImageURL:(NSURL *)originalImageURL

@@ -30,7 +30,13 @@
 
 @interface STPopupFocusImageViewController () <STPopupFocusImageDefaultViewDelegate>
 
+@property (weak, nonatomic) STPopupFocusImageManager *popupFocusImageManager;
+@property (strong, nonatomic) UIImage *fromImage;
+@property (nonatomic) CGRect imageViewFrame;
+@property (strong, nonatomic) NSURL *originalImageURL;
+@property (nonatomic) CGSize originalImageSize;
 @property (weak, nonatomic) STPopupFocusImageDefaultView *zoomImageView;
+
 @end
 
 @implementation STPopupFocusImageViewController

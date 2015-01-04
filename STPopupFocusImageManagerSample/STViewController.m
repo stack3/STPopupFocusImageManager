@@ -59,7 +59,7 @@
                                                                  imageViewFrame:destinationImageFrame
                                                                originalImageURL:originalImageURL
                                                               originalImageSize:originalImageSize];
-        [self presentViewController:con animated:NO completion:nil];
+        return con;
      }];
 }
 

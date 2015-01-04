@@ -40,6 +40,7 @@ typedef enum {
 
 @property (nonatomic) _STPhase phase;
 @property (weak, nonatomic) UIViewController *rootViewController;
+@property (weak, nonatomic) UIViewController *imageViewController;
 @property (strong, nonatomic) STPopupFocusImageAnimationView *popupAnimationView;
 
 @end
@@ -58,8 +59,7 @@ typedef enum {
             fromImage:(UIImage *)fromImage
      originalImageURL:(NSURL *)originalImageURL
     originalImageSize:(CGSize)originalImageSize
-           completion:(STPopupFocusImageManagerPopupCompleteBlock)complete
-{
+           completion:(STPopupFocusImageManagerPopupCompleteBlock)complete {
     if (_phase != _STPhaseIdle) return;
     
     _phase = _STPhasePopupAnimation;
@@ -76,7 +76,9 @@ typedef enum {
         
         CGRect destinationImageFrame = [_popupAnimationView getDestinationImageFrame];
         if (complete) {
-            complete(destinationImageFrame);
+            UIViewController *con = complete(destinationImageFrame);
+            [_rootViewController presentViewController:con animated:NO completion:nil];
+            _imageViewController = con;
         }
     }];
 }
@@ -84,8 +86,11 @@ typedef enum {
 - (void)popupBack
 {
     _phase = _STPhasePopupBackAnimation;
-    [_popupAnimationView startPopupBackAnimatingWithCompletion:^{
-        _phase = _STPhaseIdle;
+    [_imageViewController dismissViewControllerAnimated:NO completion:^{
+        [_popupAnimationView startPopupBackAnimatingWithCompletion:^{
+            _phase = _STPhaseIdle;
+            _popupAnimationView = nil;
+        }];
     }];
 }
 
