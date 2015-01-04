@@ -29,6 +29,12 @@
 #import "STPopupFocusImageDefines.h"
 #import "STPopupFocusImageUtils.h"
 
+@interface STPopupFocusImageAnimationView ()
+
+@property (weak, nonatomic) UIWindow *parentWindow;
+
+@end
+
 @implementation STPopupFocusImageAnimationView {
     __strong UIImageView *_popupImageView;
 
@@ -38,24 +44,34 @@
     CGSize _originalImageSize;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.userInteractionEnabled = YES;
-        self.layer.zPosition = STPopupFocusImageAnimationViewDefaultZPosition;
-        
-        _popupImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        [self addSubview:_popupImageView];
+        [self st_popupFocusImageAnimationViewCommonInit];
     }
     return self;
+}
+
+- (void)st_popupFocusImageAnimationViewCommonInit {
+    self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    self.userInteractionEnabled = YES;
+
+    _popupImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    [self addSubview:_popupImageView];
+
+    NSNotificationCenter *ntfCenter = [NSNotificationCenter defaultCenter];
+    [ntfCenter addObserver:self selector:@selector(handleStatusBarFrameOrOrientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    [ntfCenter addObserver:self selector:@selector(handleStatusBarFrameOrOrientationChanged:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setFromView:(UIView *)fromView
           fromImage:(UIImage *)fromImage
    originalImageURL:(NSURL *)originalImageURL
-  originalImageSize:(CGSize)originalImageSize
-{
+  originalImageSize:(CGSize)originalImageSize {
     _fromView = fromView;
     _fromImage = fromImage;
     _originalImageURL = originalImageURL;
@@ -65,7 +81,11 @@
 - (void)startPopupAnimatingWithCompletion:(void (^)())compleBlock
 {
     self.backgroundColor = [UIColor clearColor];
-    
+
+    _parentWindow = [[UIApplication sharedApplication] keyWindow];
+    self.frame = _parentWindow.bounds;
+    [_parentWindow addSubview:self];
+
     CGRect sourceImageFrame = [self getSourceImageFrame];
     CGRect destinationImageFrame = [self getDestinationImageFrame];
     _popupImageView.image = _fromImage;
@@ -80,13 +100,18 @@
         if (compleBlock) {
             compleBlock();
         }
+        [self removeFromSuperview];
     }];
 }
 
 - (void)startPopupBackAnimatingWithCompletion:(void (^)())compleBlock
 {
     self.backgroundColor = [UIColor blackColor];
-    
+
+    _parentWindow = [[UIApplication sharedApplication] keyWindow];
+    self.frame = _parentWindow.bounds;
+    [_parentWindow addSubview:self];
+
     _popupImageView.frame = [self getDestinationImageFrame];
     CGRect fromImageFrame =  [self getSourceImageFrame];
     
@@ -97,10 +122,10 @@
         self.backgroundColor = [UIColor clearColor];
         _popupImageView.frame = fromImageFrame;
     } completion:^(BOOL finished) {
-        self.hidden = YES;
         if (compleBlock) {
             compleBlock();
         }
+        [self removeFromSuperview];
     }];
 }
 
@@ -116,6 +141,58 @@
 {
     CGRect bounds = self.bounds;
     return [[STPopupFocusImageUtils class] imageFrameToFit:bounds.size originalImageSize:_originalImageSize];
+}
+
+#pragma mark - Status Bar
+
+- (void)handleStatusBarFrameOrOrientationChanged:(NSNotification *)notification
+{
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGFloat angle = [self angleForOrientation:orientation];
+    CGAffineTransform transform = CGAffineTransformMakeRotation(angle);
+
+    if (!CGAffineTransformEqualToTransform(self.transform, transform)) {
+        self.transform = transform;
+    }
+
+    if (!CGRectEqualToRect(self.frame, _parentWindow.bounds)) {
+        self.frame = _parentWindow.bounds;
+    }
+}
+
+#pragma mark - Utils
+
+- (CGFloat)currentStatusBarHeight
+{
+    UIApplication *app = [UIApplication sharedApplication];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        return app.statusBarFrame.size.width;
+    } else {
+        return app.statusBarFrame.size.height;
+    }
+}
+
+- (CGFloat)angleForOrientation:(UIInterfaceOrientation)orientation
+{
+    CGFloat angle;
+
+    switch (orientation) {
+        case UIInterfaceOrientationPortraitUpsideDown:
+            angle = M_PI;
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            angle = -M_PI_2;
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            angle = M_PI_2;
+            break;
+        default:
+            angle = 0.0;
+            break;
+    }
+
+    return angle;
 }
 
 @end
