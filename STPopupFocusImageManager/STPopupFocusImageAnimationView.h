@@ -32,6 +32,7 @@
           fromImage:(UIImage *)fromImage
    originalImageURL:(NSURL *)originalImageURL
   originalImageSize:(CGSize)originalImageSize;
+- (void)addOnWindow:(UIWindow *)window;
 - (void)startPopupAnimatingWithCompletion:(void (^)())compleBlock;
 - (void)startPopupBackAnimatingWithCompletion:(void (^)())compleBlock;
 - (CGRect)getDestinationImageFrame;

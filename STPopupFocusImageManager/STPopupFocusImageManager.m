@@ -65,51 +65,46 @@ typedef enum {
     _phase = _STPhasePopupAnimation;
     _fromImage = fromImage;
     
-    CGRect frame = [self getImageAnimationViewFrame];
-    _popupAnimationView = [[STPopupFocusImageAnimationView alloc] initWithFrame:frame];
+    _popupAnimationView = [[STPopupFocusImageAnimationView alloc] init];
     [_popupAnimationView setFromView:fromView
                            fromImage:fromImage
                     originalImageURL:originalImageURL
                    originalImageSize:originalImageSize];
+
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    _popupAnimationView.frame = window.bounds;
+    [_popupAnimationView addOnWindow:window];
+
     [_popupAnimationView startPopupAnimatingWithCompletion:^{
         _phase = _STPhaseImageViewShown;
         
         CGRect destinationImageFrame = [_popupAnimationView getDestinationImageFrame];
         if (complete) {
             UIViewController *con = complete(destinationImageFrame);
-            [_rootViewController presentViewController:con animated:NO completion:nil];
+            [_rootViewController presentViewController:con animated:NO completion:^{
+                [_popupAnimationView removeFromSuperview];
+            }];
             _imageViewController = con;
         }
     }];
 }
 
-- (void)popupBack
-{
+- (void)popupBack {
     _phase = _STPhasePopupBackAnimation;
+
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    _popupAnimationView.frame = window.bounds;
+    [_popupAnimationView addOnWindow:window];
+
     [_imageViewController dismissViewControllerAnimated:NO completion:^{
+        _imageViewController = nil;
+
         [_popupAnimationView startPopupBackAnimatingWithCompletion:^{
             _phase = _STPhaseIdle;
+            [_popupAnimationView removeFromSuperview];
             _popupAnimationView = nil;
         }];
     }];
-}
-
-#pragma mark - Dimensions
-
-- (CGRect)getImageAnimationViewFrame
-{
-    UIScreen *mainScreen = [UIScreen mainScreen];
-    CGRect frame = CGRectZero;
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationIsPortrait(orientation)) {
-        frame.size = mainScreen.bounds.size;
-    } else {
-        frame.size.width = mainScreen.bounds.size.height;
-        frame.size.height = mainScreen.bounds.size.width;
-    }
-    frame.origin.y -= _rootViewController.view.frame.origin.y;
-    
-    return frame;
 }
 
 @end

@@ -42,8 +42,8 @@
 
 @implementation STPopupFocusImageAnimationView
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (id)init {
+    self = [super initWithFrame:CGRectZero];
     if (self) {
         [self st_popupFocusImageAnimationViewCommonInit];
     }
@@ -76,18 +76,17 @@
     _originalImageSize = originalImageSize;
 }
 
-- (void)startPopupAnimatingWithCompletion:(void (^)())compleBlock
-{
+- (void)addOnWindow:(UIWindow *)window {
+    _parentWindow = window;
+    [_parentWindow addSubview:self];
+}
+
+- (void)startPopupAnimatingWithCompletion:(void (^)())compleBlock {
     self.backgroundColor = [UIColor clearColor];
 
-    _parentWindow = [[UIApplication sharedApplication] keyWindow];
-    self.frame = _parentWindow.bounds;
-    [_parentWindow addSubview:self];
-
-    CGRect sourceImageFrame = [self getSourceImageFrame];
-    CGRect destinationImageFrame = [self getDestinationImageFrame];
     _popupImageView.image = _fromImage;
-    _popupImageView.frame = sourceImageFrame;
+    _popupImageView.frame = [self getSourceImageFrame];
+    CGRect destinationImageFrame = [self getDestinationImageFrame];
     //
     // Start popup animation.
     //
@@ -98,64 +97,42 @@
         if (compleBlock) {
             compleBlock();
         }
-        //
-        // For navigationBar blink.
-        //
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self removeFromSuperview];
-        });
     }];
 }
 
-- (void)startPopupBackAnimatingWithCompletion:(void (^)())compleBlock
-{
+- (void)startPopupBackAnimatingWithCompletion:(void (^)())compleBlock {
     self.backgroundColor = [UIColor blackColor];
 
-    _parentWindow = [[UIApplication sharedApplication] keyWindow];
-    self.frame = _parentWindow.bounds;
-    [_parentWindow addSubview:self];
-
+    CGRect sourceImageFrame =  [self getSourceImageFrame];
     _popupImageView.frame = [self getDestinationImageFrame];
-    CGRect fromImageFrame =  [self getSourceImageFrame];
-    
     //
     // Start popup animation.
     //
     [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
         self.backgroundColor = [UIColor clearColor];
-        _popupImageView.frame = fromImageFrame;
+        _popupImageView.frame = sourceImageFrame;
     } completion:^(BOOL finished) {
         if (compleBlock) {
             compleBlock();
         }
-        //
-        // For navigationBar blink.
-        //
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self removeFromSuperview];
-        });
-
     }];
 }
 
-- (CGRect)getSourceImageFrame
-{
+- (CGRect)getSourceImageFrame {
     CGRect frame;
     frame.origin = [_fromView convertPoint:CGPointZero toView:self];
     frame.size = _fromView.frame.size;
     return frame;
 }
 
-- (CGRect)getDestinationImageFrame
-{
+- (CGRect)getDestinationImageFrame {
     CGRect bounds = self.bounds;
     return [[STPopupFocusImageUtils class] imageFrameToFit:bounds.size originalImageSize:_originalImageSize];
 }
 
 #pragma mark - Status Bar
 
-- (void)handleStatusBarFrameOrOrientationChanged:(NSNotification *)notification
-{
+- (void)handleStatusBarFrameOrOrientationChanged:(NSNotification *)notification {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGFloat angle = [self angleForOrientation:orientation];
     CGAffineTransform transform = CGAffineTransformMakeRotation(angle);
@@ -171,19 +148,7 @@
 
 #pragma mark - Utils
 
-- (CGFloat)currentStatusBarHeight
-{
-    UIApplication *app = [UIApplication sharedApplication];
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationIsLandscape(orientation)) {
-        return app.statusBarFrame.size.width;
-    } else {
-        return app.statusBarFrame.size.height;
-    }
-}
-
-- (CGFloat)angleForOrientation:(UIInterfaceOrientation)orientation
-{
+- (CGFloat)angleForOrientation:(UIInterfaceOrientation)orientation {
     CGFloat angle;
 
     switch (orientation) {

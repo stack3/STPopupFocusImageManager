@@ -31,13 +31,7 @@ typedef UIViewController *(^STPopupFocusImageManagerPopupCompleteBlock)(CGRect d
 
 @interface STPopupFocusImageManager : NSObject
 
-@property (strong, nonatomic) UIImage *fromImage;
-
-/**
- * Need to set NO if ViewController-based statusbar appearance is NOS on plist.
- * Default is YES.
- */
-@property (nonatomic) BOOL isViewControllerBasedStatusBarAppearance;
+@property (strong, nonatomic, readonly) UIImage *fromImage;
 
 - (id)initWithRootViewController:(UIViewController *)rootViewController;
 - (void)popupFromView:(UIView *)fromView
