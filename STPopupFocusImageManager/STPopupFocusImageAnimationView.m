@@ -81,41 +81,58 @@
     [_parentWindow addSubview:self];
 }
 
-- (void)startPopupAnimatingWithCompletion:(void (^)())compleBlock {
-    self.backgroundColor = [UIColor clearColor];
-
-    _popupImageView.image = _fromImage;
-    _popupImageView.frame = [self getSourceImageFrame];
+- (void)startPopupAnimated:(BOOL)animated completion:(void (^)())compleBlock {
     CGRect destinationImageFrame = [self getDestinationImageFrame];
-    //
-    // Start popup animation.
-    //
-    [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
+
+    if (animated) {
+        self.backgroundColor = [UIColor clearColor];
+        _popupImageView.image = _fromImage;
+        _popupImageView.frame = [self getSourceImageFrame];
+        //
+        // Start popup animation.
+        //
+        [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
+            self.backgroundColor = [UIColor blackColor];
+            _popupImageView.frame = destinationImageFrame;
+        } completion:^(BOOL finished) {
+            if (compleBlock) {
+                compleBlock();
+            }
+        }];
+    } else {
         self.backgroundColor = [UIColor blackColor];
         _popupImageView.frame = destinationImageFrame;
-    } completion:^(BOOL finished) {
         if (compleBlock) {
             compleBlock();
         }
-    }];
+    }
 }
 
-- (void)startPopupBackAnimatingWithCompletion:(void (^)())compleBlock {
-    self.backgroundColor = [UIColor blackColor];
-
+- (void)startPopupBackAnimated:(BOOL)animated completion:(void (^)())compleBlock {
     CGRect sourceImageFrame =  [self getSourceImageFrame];
-    _popupImageView.frame = [self getDestinationImageFrame];
-    //
-    // Start popup animation.
-    //
-    [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
+
+    if (animated) {
+        //
+        // Start popup animation.
+        //
+        self.backgroundColor = [UIColor blackColor];
+        _popupImageView.frame = [self getDestinationImageFrame];
+
+        [UIView animateWithDuration:STPopupFocusImageAnimationDuration animations:^{
+            self.backgroundColor = [UIColor clearColor];
+            _popupImageView.frame = sourceImageFrame;
+        } completion:^(BOOL finished) {
+            if (compleBlock) {
+                compleBlock();
+            }
+        }];
+    } else {
         self.backgroundColor = [UIColor clearColor];
         _popupImageView.frame = sourceImageFrame;
-    } completion:^(BOOL finished) {
         if (compleBlock) {
             compleBlock();
         }
-    }];
+    }
 }
 
 - (CGRect)getSourceImageFrame {

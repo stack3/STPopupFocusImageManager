@@ -28,17 +28,20 @@
 #import "STPopupFocusImageViewController.h"
 
 typedef UIViewController *(^STPopupFocusImageManagerPopupCompleteBlock)(CGRect destinationImageFrame);
+typedef void (^STPopupFocusImageManagerPopupBackCompleteBlock)();
 
 @interface STPopupFocusImageManager : NSObject
 
 @property (strong, nonatomic, readonly) UIImage *fromImage;
 
 - (id)initWithRootViewController:(UIViewController *)rootViewController;
-- (void)popupFromView:(UIView *)fromView
+- (void)popupAnimated:(BOOL)animated
+             fromView:(UIView *)fromView
             fromImage:(UIImage *)fromImage
      originalImageURL:(NSURL *)originalImageURL
     originalImageSize:(CGSize)originalImageSize
            completion:(STPopupFocusImageManagerPopupCompleteBlock)complete;
-- (void)popupBack;
+- (void)popupBackAnimated:(BOOL)animated complete:(STPopupFocusImageManagerPopupBackCompleteBlock)complete;
+- (BOOL)isPresented;
 
 @end

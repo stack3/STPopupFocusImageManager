@@ -55,7 +55,8 @@ typedef enum {
     return self;
 }
 
-- (void)popupFromView:(UIView *)fromView
+- (void)popupAnimated:(BOOL)animated
+             fromView:(UIView *)fromView
             fromImage:(UIImage *)fromImage
      originalImageURL:(NSURL *)originalImageURL
     originalImageSize:(CGSize)originalImageSize
@@ -75,7 +76,7 @@ typedef enum {
     _popupAnimationView.frame = window.bounds;
     [_popupAnimationView addOnWindow:window];
 
-    [_popupAnimationView startPopupAnimatingWithCompletion:^{
+    [_popupAnimationView startPopupAnimated:animated completion:^{
         _phase = _STPhaseImageViewShown;
         
         CGRect destinationImageFrame = [_popupAnimationView getDestinationImageFrame];
@@ -89,7 +90,7 @@ typedef enum {
     }];
 }
 
-- (void)popupBack {
+- (void)popupBackAnimated:(BOOL)animated complete:(STPopupFocusImageManagerPopupBackCompleteBlock)complete {
     _phase = _STPhasePopupBackAnimation;
 
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
@@ -99,12 +100,19 @@ typedef enum {
     [_imageViewController dismissViewControllerAnimated:NO completion:^{
         _imageViewController = nil;
 
-        [_popupAnimationView startPopupBackAnimatingWithCompletion:^{
+        [_popupAnimationView startPopupBackAnimated:animated completion:^{
             _phase = _STPhaseIdle;
             [_popupAnimationView removeFromSuperview];
             _popupAnimationView = nil;
+            if (complete) {
+                complete();
+            }
         }];
     }];
+}
+
+- (BOOL)isPresented {
+    return _phase != _STPhaseIdle;
 }
 
 @end

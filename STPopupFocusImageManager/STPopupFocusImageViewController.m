@@ -73,7 +73,7 @@
 }
 
 - (void)dismissPopupFocusImage {
-    [_popupFocusImageManager popupBack];
+    [_popupFocusImageManager popupBackAnimated:YES complete:nil];
 }
 
 - (BOOL)prefersStatusBarHidden {
